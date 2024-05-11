@@ -1,0 +1,43 @@
+<div id="{uniqueID}_modal" class="modal_outer noselect">
+
+	<div id="{uniqueID}__keyboardControlPreview" style="position: fixed; bottom: calc( 15vh - 50px ); left: calc( 50vw - 50px )" class="noselect">
+		<img  src="assets/keycaps_icon.svg" alt="Keyboard Preview" width="100" height="100">
+	</div> 
+
+	<div class="modal_inner noselect">
+		<h3>키보드 로봇 컨트롤</h3>
+		<p id="{uniqueID}_status" class="status">Status: Ok.</p>
+		<hr>
+		<label for="{uniqueID}_topic">Topic:</label>
+		<select id="{uniqueID}_topic" name="topic">
+			<!-- add topics here-->
+		</select>
+
+		<p>키보드로 로봇을 제어합니다.</p>
+
+		
+		<label for="{uniqueID}_linear_velocity">직선 Velocity (m/s):</label>
+		<span id="{uniqueID}_linear_velocity_value">0.5</span>
+		<input type="range" value="0.2" step="0.05" min="0.05" max="3.0" id="{uniqueID}_linear_velocity">
+
+		<br>
+
+		<label for="{uniqueID}_angular_velocity">각회전 Velocity (m/s):</label>
+		<span id="{uniqueID}_angular_velocity_value">0.5</span>
+		<input type="range" value="0.5" step="0.05" min="0.05" max="6.0" id="{uniqueID}_angular_velocity">
+
+		<br>
+
+		<hr>
+
+		<br>
+
+		<button id="{uniqueID}_remove" class="delete_button" onclick="removeWidget('{uniqueID}')">Remove Widget</button>
+
+	</div>
+
+	<div style="height: 180vh; width: 1px;">
+		<!-- Scroll spacer-->
+	</div>
+
+</div>

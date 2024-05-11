@@ -29,8 +29,8 @@ class TopicHandler:
 			for key in list(self.transforms.keys()):
 				if time.time() - self.transform_timeout[key] > 10.0:
 					parent = self.transforms[key].header.frame_id
-					del self.transforms[key]
-					del self.transform_timeout[key]
+					#del self.transforms[key]
+					#del self.transform_timeout[key]
 					self.updated = True
 					rospy.logwarn("Deleted old TF link: "+str(parent)+" -> "+str(key))
 
