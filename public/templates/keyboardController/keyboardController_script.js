@@ -48,7 +48,6 @@ if (settings.hasOwnProperty('{uniqueID}')) {
 
 	linearVelValue.textContent = linearVelSlider.value;
 	angularVelValue.textContent = angularVelSlider.value;
-	accelValue.textContent = accelSlider.value;
 }else{
 	saveSettings();
 }
@@ -221,5 +220,7 @@ function robotControlEventHandler(event) {
 		publishTwist(_linearVel, 0, _angularVel);
 	}
 }
+
+initRobotControl();
 
 console.log("Keyboard controller Widget Loaded {uniqueID}")
