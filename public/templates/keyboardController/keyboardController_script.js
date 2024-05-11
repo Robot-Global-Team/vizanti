@@ -193,8 +193,8 @@ function robotControlEventHandler(event) {
 
 	let _linearVel = 0;
 	let _angularVel = 0;
-	const ANGULAR_WEIGHT = parseFloat(linearVelSlider.value);
-	const LINEAR_WEIGHT = parseFloat(angularVelSlider.value);
+	const ANGULAR_WEIGHT = parseFloat(angularVelSlider.value);
+	const LINEAR_WEIGHT = parseFloat(linearVelSlider.value);
 
 	switch(direction) {
 		case DIRECTION[KEY.UP]:
