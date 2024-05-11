@@ -34,11 +34,6 @@ angularVelSlider.addEventListener('input', function () {
 	saveSettings();
 });
 
-accelSlider.addEventListener('input', function () {
-	accelValue.textContent = this.value;
-	saveSettings();
-});
-
 linearVelSlider.addEventListener('change', saveSettings);
 angularVelSlider.addEventListener('change', saveSettings);
 
