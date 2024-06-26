@@ -13,6 +13,7 @@ let status = new Status(
 );
 
 let cmdVelPublisher = undefined;
+let saveCommandPublisher = undefined;
 
 const selectionbox = document.getElementById("{uniqueID}_topic");
 const icon = document.getElementById("{uniqueID}_icon").getElementsByTagName('img')[0];
@@ -98,6 +99,12 @@ function connect(){
 		messageType: 'geometry_msgs/Twist',
 		queue_size: 1
 	});
+	saveCommandPublisher = new ROSLIB.Topic({
+		ros: rosbridge.ros,
+		name: 'sirbot1/mapsaver',
+		messageType: 'std_msgs/Bool',
+		queue_size: 1
+	});
 }
 
 function publishTwist(linearX, linearY, angularZ) {
@@ -106,6 +113,15 @@ function publishTwist(linearX, linearY, angularZ) {
 		angular: { x: 0, y: 0, z: angularZ },
 	});
 	cmdVelPublisher.publish(twist);
+}
+
+function publishSave(){
+
+	const boolMessage = new ROSLIB.Message({
+    	data: true // true 값을 포함한 메시지 생성
+  	});
+
+  	saveCommandPublisher.publish(boolMessage);
 }
 
 selectionbox.addEventListener("change", (event) => {
@@ -177,6 +193,7 @@ function robotControlEventHandler(event) {
 		RIGHT: 'l',
 		UP: 'i',
 		DOWN: 'k',
+		SAVE: 's',
 	}
 
 	const DIRECTION = {
@@ -184,6 +201,7 @@ function robotControlEventHandler(event) {
 		[KEY.RIGHT]: 'right',
 		[KEY.DOWN]: 'down',
 		[KEY.LEFT]: 'left',
+		[KEY.SAVE]: 'save',
 	}
 	const direction = DIRECTION[event.key];
 
@@ -209,6 +227,9 @@ function robotControlEventHandler(event) {
 		case DIRECTION[KEY.LEFT]:
 			_angularVel += ANGULAR_WEIGHT;
 			break;
+		case DIRECTION[KEY.SAVE]:
+			publishSave();
+			break;
 		default:
 			break;
 	}
@@ -219,6 +240,7 @@ function robotControlEventHandler(event) {
 	else{
 		publishTwist(_linearVel, 0, _angularVel);
 	}
+	
 }
 
 initRobotControl();
