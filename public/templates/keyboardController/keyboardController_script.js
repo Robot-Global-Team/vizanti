@@ -14,6 +14,7 @@ let status = new Status(
 
 let cmdVelPublisher = undefined;
 let saveCommandPublisher = undefined;
+let motorPowerPublisher = undefined;  // 추가: motor power publisher
 
 const selectionbox = document.getElementById("{uniqueID}_topic");
 const icon = document.getElementById("{uniqueID}_icon").getElementsByTagName('img')[0];
@@ -105,6 +106,41 @@ function connect(){
 		messageType: 'std_msgs/Bool',
 		queue_size: 1
 	});
+	motorPowerPublisher = new ROSLIB.Topic({ // 추가: motor power publisher 초기화
+		ros: rosbridge.ros,
+		name: 'sirbot1/motor_power',
+		messageType: 'std_msgs/Bool',
+		queue_size: 1
+	});
+
+	// Subscribe to the mapsaved topic
+	let mapSavedSubscriber = new ROSLIB.Topic({
+		ros: rosbridge.ros,
+		name: 'sirbot1/mapsaved',
+		messageType: 'std_msgs/Bool',
+	});
+
+	let alertActive = false; // 플래그 초기화
+
+	mapSavedSubscriber.subscribe((message) => {
+		if (message.data && !alertActive) {
+			alert('지도를 저장하였습니다.');
+			alertActive = true;
+			setTimeout(() => {
+				alertActive = false; // 일정 시간 후 플래그 리셋
+			}, 1000); // 1초 후 다시 팝업이 가능하도록 설정 (필요에 따라 시간 조절)
+		}
+	});
+
+	// 프로그램이 처음 실행될 때 motor power 토픽을 5초 동안 게시
+	let intervalID = setInterval(() => {
+		publishMotorPower(true);
+	}, 1000); // 1초마다 게시
+
+	// 5초 후 게시 중지
+	setTimeout(() => {
+		clearInterval(intervalID);
+	}, 5000); // 5초 후 중지
 }
 
 function publishTwist(linearX, linearY, angularZ) {
@@ -116,12 +152,19 @@ function publishTwist(linearX, linearY, angularZ) {
 }
 
 function publishSave(){
-
 	const boolMessage = new ROSLIB.Message({
     	data: true // true 값을 포함한 메시지 생성
   	});
 
   	saveCommandPublisher.publish(boolMessage);
+}
+
+function publishMotorPower(state){
+	const boolMessage = new ROSLIB.Message({
+    	data: state // true 값을 포함한 메시지 생성
+  	});
+
+  	motorPowerPublisher.publish(boolMessage);
 }
 
 selectionbox.addEventListener("change", (event) => {
@@ -141,11 +184,9 @@ icon.addEventListener("click", (event) => {
 
 loadTopics();
 
-
 //preview for moving around
 
 let preview_active = false;
-
 
 /**
  * 로봇 컨트롤 초기화 함수
@@ -162,7 +203,7 @@ function initRobotControl() {
 	window.RGT_CONFIG.KEYBOARD_EVENT_INITIALZIED = true;
 
 	const throttledEventHandler = throttle(robotControlEventHandler, 200);
-	document.addEventListener('keypress', throttledEventHandler);
+	document.addEventListener('keydown', throttledEventHandler);
 }
 
 function throttle(mainFunction, delay) {
@@ -189,10 +230,10 @@ function throttle(mainFunction, delay) {
  */
 function robotControlEventHandler(event) {
 	const KEY = {
-		LEFT: 'j',
-		RIGHT: 'l',
-		UP: 'i',
-		DOWN: 'k',
+		LEFT: 'ArrowLeft',
+		RIGHT: 'ArrowRight',
+		UP: 'ArrowUp',
+		DOWN: 'ArrowDown',
 		SAVE: 's',
 	}
 
