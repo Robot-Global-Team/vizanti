@@ -20,12 +20,27 @@ catkin_make
 
 Or if rosdep fails for some reason, these are the main two deps:
 ```
-sudo apt install ros-noetic-rosbridge-suite python3-flask
+sudo apt install ros-noetic-melodic-suite python3-flask
+```
+
+```
+pip3 install mss
 ```
  
 Flask and Jinja2 are used for templating, rosbridge is required for socket communication.
 
 ## Run
+
+```device.launch
+
+<group ns ="/">
+   <include file="$(find vizanti)/launch/server.launch"/>
+</group>
+
+```
+
+
+
 ```bash
 roslaunch vizanti server.launch
 ```
