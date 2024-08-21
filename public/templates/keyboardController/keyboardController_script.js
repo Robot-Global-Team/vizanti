@@ -20,7 +20,6 @@ const selectionbox = document.getElementById("{uniqueID}_topic");
 const icon = document.getElementById("{uniqueID}_icon").getElementsByTagName('img')[0];
 
 // Sliders and checkboxes
-
 const linearVelSlider = document.getElementById('{uniqueID}_linear_velocity');
 const angularVelSlider = document.getElementById('{uniqueID}_angular_velocity');
 const linearVelValue = document.getElementById('{uniqueID}_linear_velocity_value');
@@ -40,7 +39,6 @@ linearVelSlider.addEventListener('change', saveSettings);
 angularVelSlider.addEventListener('change', saveSettings);
 
 // Settings
-
 if (settings.hasOwnProperty('{uniqueID}')) {
     const loaded_data = settings['{uniqueID}'];
     topic = loaded_data.topic;
@@ -54,7 +52,7 @@ if (settings.hasOwnProperty('{uniqueID}')) {
     saveSettings();
 }
 
-if (topic == "") {
+if(topic == ""){
     topic = "/cmd_vel";
     status.setWarn("No topic found, defaulting to /cmd_vel");
     saveSettings();
@@ -70,22 +68,21 @@ function saveSettings() {
 }
 
 // Topic and connections
-
-async function loadTopics() {
+async function loadTopics(){
     let result = await rosbridge.get_topics("geometry_msgs/Twist");
     let topiclist = "";
     result.forEach(element => {
-        topiclist += "<option value='" + element + "'>" + element + "</option>"
+        topiclist += "<option value='"+element+"'>"+element+"</option>"
     });
     selectionbox.innerHTML = topiclist;
 
-    if (topic == "")
+    if(topic == "")
         topic = selectionbox.value;
-    else {
-        if (result.includes(topic)) {
+    else{
+        if(result.includes(topic)){
             selectionbox.value = topic;
-        } else {
-            topiclist += "<option value='" + topic + "'>" + topic + "</option>"
+        }else{
+            topiclist += "<option value='"+topic+"'>"+topic+"</option>"
             selectionbox.innerHTML = topiclist
             selectionbox.value = topic;
         }
@@ -93,7 +90,7 @@ async function loadTopics() {
     connect();
 }
 
-function connect() {
+function connect(){
     cmdVelPublisher = new ROSLIB.Topic({
         ros: rosbridge.ros,
         name: topic,
@@ -113,14 +110,13 @@ function connect() {
         queue_size: 1
     });
 
-    // Subscribe to the mapsaved topic
     let mapSavedSubscriber = new ROSLIB.Topic({
         ros: rosbridge.ros,
         name: 'sirbot1/mapsaved',
         messageType: 'std_msgs/Bool',
     });
 
-    let alertActive = false; // 플래그 초기화
+    let alertActive = false;
 
     mapSavedSubscriber.subscribe((message) => {
         if (message.data && !alertActive) {
@@ -152,16 +148,13 @@ function connect() {
         }
     });
 
-    // 프로그램이 처음 실행될 때 motor power 토픽을 5초 동안 게시
     let intervalID = setInterval(() => {
         publishMotorPower(true);
-    }, 1000); // 1초마다 게시
+    }, 1000);
 
-    // 5초 후 게시 중지
     setTimeout(() => {
         clearInterval(intervalID);
-    }, 5000); // 5초 후 중지
-
+    }, 5000);
     // 초기에는 빨간색 원을 그립니다.
     drawCircle('red');
 }
@@ -176,15 +169,14 @@ function publishTwist(linearX, linearY, angularZ) {
 
 function publishSave() {
     const boolMessage = new ROSLIB.Message({
-        data: true // true 값을 포함한 메시지 생성
+        data: true
     });
-
     saveCommandPublisher.publish(boolMessage);
 }
 
-function publishMotorPower(state) {
+function publishMotorPower(state){
     const boolMessage = new ROSLIB.Message({
-        data: state // true 값을 포함한 메시지 생성
+        data: state
     });
 
     motorPowerPublisher.publish(boolMessage);
@@ -222,13 +214,26 @@ icon.addEventListener("click", (event) => {
 
 loadTopics();
 
-//preview for moving around
+// 20Hz publishing variables and functions
+let currentLinearVel = 0;
+let currentAngularVel = 0;
 
-let preview_active = false;
+function updateVelocities(linearX, angularZ) {
+    currentLinearVel = linearX;
+    currentAngularVel = angularZ;
+}
 
-/**
- * 로봇 컨트롤 초기화 함수
- */
+function publishVelocities() {
+    if(settings['{uniqueID}'].holonomic_swap){
+        publishTwist(currentLinearVel, currentAngularVel, 0);
+    }
+    else{
+        publishTwist(currentLinearVel, 0, currentAngularVel);
+    }
+}
+
+setInterval(publishVelocities, 1000 / 20);  // 20Hz
+
 function initRobotControl() {
     if (!window.RGT_CONFIG) {
         window.RGT_CONFIG = {};
@@ -242,17 +247,20 @@ function initRobotControl() {
 
     const throttledEventHandler = throttle(robotControlEventHandler, 200);
     document.addEventListener('keydown', throttledEventHandler);
+    document.addEventListener('keyup', function(event) {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            updateVelocities(0, 0);
+        }
+    });
 }
 
 function throttle(mainFunction, delay) {
-    let timerFlag = null; // Variable to keep track of the timer
-
-    // Returning a throttled version 
+    let timerFlag = null;
     return (...args) => {
-        if (timerFlag === null) { // If there is no timer currently running
-            mainFunction(...args); // Execute the main function 
-            timerFlag = setTimeout(() => { // Set a timer to clear the timerFlag after the specified delay
-                timerFlag = null; // Clear the timerFlag to allow the main function to be executed again
+        if (timerFlag === null) {
+            mainFunction(...args);
+            timerFlag = setTimeout(() => {
+                timerFlag = null;
             }, delay);
         }
     };
@@ -293,7 +301,7 @@ function robotControlEventHandler(event) {
     const ANGULAR_WEIGHT = parseFloat(angularVelSlider.value);
     const LINEAR_WEIGHT = parseFloat(linearVelSlider.value);
 
-    switch (direction) {
+    switch(direction) {
         case DIRECTION[KEY.UP]:
             _linearVel += LINEAR_WEIGHT;
             break;
@@ -313,12 +321,7 @@ function robotControlEventHandler(event) {
             break;
     }
 
-    if (settings['{uniqueID}'].holonomic_swap) {
-        publishTwist(_linearVel, _angularVel, 0);
-    } else {
-        publishTwist(_linearVel, 0, _angularVel);
-    }
-
+    updateVelocities(_linearVel, _angularVel);
 }
 
 initRobotControl();
