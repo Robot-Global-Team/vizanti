@@ -217,22 +217,44 @@ loadTopics();
 // 20Hz publishing variables and functions
 let currentLinearVel = 0;
 let currentAngularVel = 0;
+let isPublishing = false;
+let publishIntervalId = null;
 
 function updateVelocities(linearX, angularZ) {
     currentLinearVel = linearX;
     currentAngularVel = angularZ;
+    
+    if (!isPublishing) {
+        startPublishing();
+    }
 }
 
 function publishVelocities() {
-    if(settings['{uniqueID}'].holonomic_swap){
+    if (settings['{uniqueID}'].holonomic_swap) {
         publishTwist(currentLinearVel, currentAngularVel, 0);
-    }
-    else{
+    } else {
         publishTwist(currentLinearVel, 0, currentAngularVel);
+    }
+
+    if (currentLinearVel === 0 && currentAngularVel === 0) {
+        stopPublishing();
     }
 }
 
-setInterval(publishVelocities, 1000 / 20);  // 20Hz
+function startPublishing() {
+    if (!isPublishing) {
+        isPublishing = true;
+        publishIntervalId = setInterval(publishVelocities, 1000 / 20);  // 20Hz
+    }
+}
+
+function stopPublishing() {
+    if (isPublishing) {
+        clearInterval(publishIntervalId);
+        isPublishing = false;
+        publishIntervalId = null;
+    }
+}
 
 function initRobotControl() {
     if (!window.RGT_CONFIG) {
@@ -245,8 +267,7 @@ function initRobotControl() {
 
     window.RGT_CONFIG.KEYBOARD_EVENT_INITIALZIED = true;
 
-    const throttledEventHandler = throttle(robotControlEventHandler, 200);
-    document.addEventListener('keydown', throttledEventHandler);
+    document.addEventListener('keydown', robotControlEventHandler);
     document.addEventListener('keyup', function(event) {
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
             updateVelocities(0, 0);
@@ -254,26 +275,6 @@ function initRobotControl() {
     });
 }
 
-function throttle(mainFunction, delay) {
-    let timerFlag = null;
-    return (...args) => {
-        if (timerFlag === null) {
-            mainFunction(...args);
-            timerFlag = setTimeout(() => {
-                timerFlag = null;
-            }, delay);
-        }
-    };
-}
-
-/**
- * robotControlEventHandler
- * 
- * 키보드 입력을 받아서 조이스틱으로 방향에 대한 벡터 값을 보냅니다.
- * 
- * @param {KeyboardEvent} event 
- * @returns void
- */
 function robotControlEventHandler(event) {
     const KEY = {
         LEFT: 'ArrowLeft',
@@ -316,7 +317,7 @@ function robotControlEventHandler(event) {
             break;
         case DIRECTION[KEY.SAVE]:
             publishSave();
-            break;
+            return;
         default:
             break;
     }
@@ -326,4 +327,4 @@ function robotControlEventHandler(event) {
 
 initRobotControl();
 
-console.log("Keyboard controller Widget Loaded {uniqueID}")
+console.log("Keyboard controller Widget Loaded {uniqueID}");
