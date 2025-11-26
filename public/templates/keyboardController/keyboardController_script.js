@@ -256,6 +256,24 @@ function stopPublishing() {
     }
 }
 
+const pressedKeys = new Set();
+
+function updateFromPressedKeys() {
+    const ANGULAR_WEIGHT = parseFloat(angularVelSlider.value);
+    const LINEAR_WEIGHT = parseFloat(linearVelSlider.value);
+    
+    let _linearVel = 0;
+    let _angularVel = 0;
+    
+    // 현재 눌린 모든 키를 기반으로 속도 계산
+    if (pressedKeys.has('ArrowUp')) _linearVel += LINEAR_WEIGHT;
+    if (pressedKeys.has('ArrowDown')) _linearVel -= LINEAR_WEIGHT;
+    if (pressedKeys.has('ArrowLeft')) _angularVel += ANGULAR_WEIGHT;
+    if (pressedKeys.has('ArrowRight')) _angularVel -= ANGULAR_WEIGHT;
+    
+    updateVelocities(_linearVel, _angularVel);
+}
+
 function initRobotControl() {
     if (!window.RGT_CONFIG) {
         window.RGT_CONFIG = {};
@@ -267,62 +285,31 @@ function initRobotControl() {
 
     window.RGT_CONFIG.KEYBOARD_EVENT_INITIALZIED = true;
 
-    document.addEventListener('keydown', robotControlEventHandler);
-    document.addEventListener('keyup', function(event) {
+    document.addEventListener('keydown', function(event) {
+        // 방향키 처리
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-            updateVelocities(0, 0);
+            event.preventDefault(); // 페이지 스크롤 방지
+            pressedKeys.add(event.key);
+            updateFromPressedKeys();
+        }
+        // 저장 키 처리
+        if (event.key === 's') {
+            publishSave();
         }
     });
-}
 
-function robotControlEventHandler(event) {
-    const KEY = {
-        LEFT: 'ArrowLeft',
-        RIGHT: 'ArrowRight',
-        UP: 'ArrowUp',
-        DOWN: 'ArrowDown',
-        SAVE: 's',
-    }
+    document.addEventListener('keyup', function(event) {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            pressedKeys.delete(event.key);
+            updateFromPressedKeys();
+        }
+    });
 
-    const DIRECTION = {
-        [KEY.UP]: 'up',
-        [KEY.RIGHT]: 'right',
-        [KEY.DOWN]: 'down',
-        [KEY.LEFT]: 'left',
-        [KEY.SAVE]: 'save',
-    }
-    const direction = DIRECTION[event.key];
-
-    if (!direction) {
-        return;
-    }
-
-    let _linearVel = 0;
-    let _angularVel = 0;
-    const ANGULAR_WEIGHT = parseFloat(angularVelSlider.value);
-    const LINEAR_WEIGHT = parseFloat(linearVelSlider.value);
-
-    switch(direction) {
-        case DIRECTION[KEY.UP]:
-            _linearVel += LINEAR_WEIGHT;
-            break;
-        case DIRECTION[KEY.DOWN]:
-            _linearVel -= LINEAR_WEIGHT;
-            break;
-        case DIRECTION[KEY.RIGHT]:
-            _angularVel -= ANGULAR_WEIGHT;
-            break;
-        case DIRECTION[KEY.LEFT]:
-            _angularVel += ANGULAR_WEIGHT;
-            break;
-        case DIRECTION[KEY.SAVE]:
-            publishSave();
-            return;
-        default:
-            break;
-    }
-
-    updateVelocities(_linearVel, _angularVel);
+    // 창이 포커스를 잃으면 모든 키 해제 (안전장치)
+    window.addEventListener('blur', function() {
+        pressedKeys.clear();
+        updateVelocities(0, 0);
+    });
 }
 
 initRobotControl();

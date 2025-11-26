@@ -1,0 +1,331 @@
+{
+  "navbar": [
+    {
+      "type": "settings",
+      "id": "settings_default"
+    },
+    {
+      "type": "rosbridge",
+      "id": "rosbridge_default"
+    },
+    {
+      "type": "grid",
+      "id": "grid_default"
+    },
+    {
+      "type": "tf",
+      "id": "tf_default"
+    },
+    {
+      "type": "robotmodel",
+      "id": "robotmodel_autoID_0"
+    },
+    {
+      "type": "initialpose",
+      "id": "initialpose_autoID_2"
+    },
+    {
+      "type": "simplegoal",
+      "id": "simplegoal_autoID_3"
+    },
+    {
+      "type": "map",
+      "id": "map_autoID_4"
+    },
+    {
+      "type": "scan",
+      "id": "scan_autoID_6"
+    },
+    {
+      "type": "path",
+      "id": "path_autoID_11"
+    },
+    {
+      "type": "markerarray",
+      "id": "markerarray_autoID_20"
+    },
+    {
+      "type": "compressedimage",
+      "id": "compressedimage_autoID_21"
+    },
+    {
+      "type": "pointcloud",
+      "id": "pointcloud_autoID_22"
+    },
+    {
+      "type": "teleop",
+      "id": "teleop_autoID_23"
+    },
+    {
+      "type": "keyboardController",
+      "id": "keyboardController_autoID_24"
+    }
+  ],
+  "view": {
+    "center": {
+      "x": 7.114372113034099,
+      "y": -13.75488140129593
+    },
+    "scale": 41.13512373959272
+  },
+  "grid_default": {
+    "size": 1.04,
+    "thickness": 1,
+    "colour": "#001eff"
+  },
+  "settings_default": {
+    "fixed_frame": "map",
+    "background_color": "#283d57"
+  },
+  "tf_default": {
+    "show_names": false,
+    "show_axes": false,
+    "show_lines": false,
+    "scale": 0.5,
+    "frame_visibility": {
+      "sirbot1/base_footprint": true,
+      "sirbot1/ekf_odom": true,
+      "map": true,
+      "sirbot1/base_link": true,
+      "sirbot1/camera1_bottom_screw_link": true,
+      "sirbot1/camera1_color_frame": true,
+      "sirbot1/camera1_link": true,
+      "sirbot1/camera1_color_optical_frame": true,
+      "sirbot1/camera1_depth_frame": true,
+      "sirbot1/camera1_depth_optical_frame": true,
+      "sirbot1/camera1_infra1_frame": true,
+      "sirbot1/camera1_infra1_optical_frame": true,
+      "sirbot1/camera1_infra2_frame": true,
+      "sirbot1/camera1_infra2_optical_frame": true,
+      "sirbot1/camera2_bottom_screw_link": true,
+      "sirbot1/camera2_color_frame": true,
+      "sirbot1/camera2_link": true,
+      "sirbot1/camera2_color_optical_frame": true,
+      "sirbot1/camera2_depth_frame": true,
+      "sirbot1/camera2_depth_optical_frame": true,
+      "sirbot1/camera2_infra1_frame": true,
+      "sirbot1/camera2_infra1_optical_frame": true,
+      "sirbot1/camera2_infra2_frame": true,
+      "sirbot1/camera2_infra2_optical_frame": true,
+      "sirbot1/imu_link": true,
+      "sirbot1/scan_link": true,
+      "sirbot1/ekf_base_footprint": true,
+      "sirbot1/camera_bottom_screw_link": true,
+      "sirbot1/camera_color_frame": true,
+      "sirbot1/camera_link": true,
+      "sirbot1/camera_color_optical_frame": true,
+      "sirbot1/camera_depth_frame": true,
+      "sirbot1/camera_depth_optical_frame": true,
+      "sirbot1/camera_infra1_frame": true,
+      "sirbot1/camera_infra1_optical_frame": true,
+      "sirbot1/camera_infra2_frame": true,
+      "sirbot1/camera_infra2_optical_frame": true
+    }
+  },
+  "uid": 25,
+  "keyboardController_autoID_1": {
+    "topic": "/sirbot1/cmd_vel_rc",
+    "linear_velocity": 0.5,
+    "angular_velocity": 0.5
+  },
+  "map_autoID_0": {
+    "topic": "/sirbot1/map_localization",
+    "opacity": "0.7",
+    "colour_scheme": 0,
+    "throttle": "1000",
+    "use_timestamp": false
+  },
+  "initialpose_autoID_2": {
+    "topic": "/sirbot1/initialpose"
+  },
+  "simplegoal_autoID_3": {
+    "topic": "/sirbot1/sirbot1"
+  },
+  "scan_autoID_4": {
+    "topic": "/sirbot1/scan",
+    "opacity": "1",
+    "thickness": "0.02",
+    "color": "#ff1100",
+    "throttle": "200"
+  },
+  "rosbag_autoID_5": {
+    "path": "~/recording.bag",
+    "topic_list": []
+  },
+  "initialpose_autoID_6": {
+    "topic": "/sirbot1/initialpose"
+  },
+  "initialpose_autoID_7": {
+    "topic": "/sirbot1/initialpose"
+  },
+  "robotmodel_autoID_0": {
+    "frame": "sirbot1/base_link",
+    "sprite": "square",
+    "length": "0.4"
+  },
+  "teleop_autoID_1": {
+    "topic": "/sirbot1/filtered_key_vel",
+    "linear_velocity": 0.3,
+    "angular_velocity": 0.5,
+    "joy_offset_x": "88.34322719913654%",
+    "joy_offset_y": "84.97854077253218%",
+    "accel": 0.05,
+    "invert_angular": true,
+    "holonomic_swap": false
+  },
+  "map_autoID_4": {
+    "topic": "/sirbot1/map_navigation",
+    "opacity": "0.7",
+    "colour_scheme": 0,
+    "throttle": "1000",
+    "use_timestamp": false
+  },
+  "compressedimage_autoID_5": {
+    "topic": "/sirbot1/camera/color/image_raw/compressed",
+    "opacity": "0.85",
+    "throttle": "50",
+    "width": "25",
+    "img_offset_x": 15.59633027522936,
+    "img_offset_y": 67.4892703862661,
+    "rotation": "0"
+  },
+  "scan_autoID_6": {
+    "topic": "/sirbot1/scan_filtered",
+    "opacity": "1",
+    "thickness": "0.06",
+    "color": "#ff1100",
+    "throttle": "50"
+  },
+  "pointcloud_autoID_7": {
+    "topic": "/sirbot1/rgbd_filtered",
+    "opacity": "1",
+    "thickness": "0.05",
+    "color": "#00aeff",
+    "throttle": "50"
+  },
+  "compressedimage_autoID_8": {
+    "topic": "/sirbot1/camera/aligned_depth_to_color/image_raw/compressed",
+    "opacity": "0.85",
+    "throttle": "50",
+    "width": "25",
+    "img_offset_x": 15.542363734484619,
+    "img_offset_y": 28.00429184549356,
+    "rotation": "0"
+  },
+  "button_autoID_11": {
+    "topic": "",
+    "text": "Text",
+    "typedict": {
+      "/sirbot1/navi_cancel": "std_msgs/Bool",
+      "/sirbot1/zltech_termination": "std_msgs/Bool",
+      "/sirbot1/move_backward": "std_msgs/Bool",
+      "/sirbot1/motor_estop": "std_msgs/Bool",
+      "/sirbot1/motor_power": "std_msgs/Bool",
+      "/sirbot1/packet_status": "std_msgs/Bool",
+      "/sirbot1/marker_start": "std_msgs/Bool",
+      "/sirbot1/pause": "std_msgs/Bool",
+      "/time_manager_termination": "std_msgs/Bool",
+      "/sirbot1/rc_assist": "std_msgs/Bool",
+      "/sirbot1/speed_filter_termination": "std_msgs/Bool",
+      "/sirbot1/rc_mode": "std_msgs/Bool",
+      "/sirbot1/estop": "std_msgs/Bool",
+      "/sirbot1/disable_safety": "std_msgs/Bool",
+      "/sirbot1/rgt_rs_manager_termination": "std_msgs/Bool",
+      "/sirbot1/odom_cal_termination": "std_msgs/Bool",
+      "/sirbot1/service_complete": "std_msgs/Bool",
+      "/sirbot1/speed_throtle": "std_msgs/Bool",
+      "/sirbot1/motor_engage": "std_msgs/Bool",
+      "/sirbot1/motor_onoff": "std_msgs/Bool",
+      "/sirbot1/speed_filter_zero": "std_msgs/Bool",
+      "/sirbot1/collision_detect/estop_ultra": "std_msgs/Bool",
+      "/sirbot1/egl": "std_msgs/Bool",
+      "/sirbot1/marker_end": "std_msgs/Bool",
+      "/sirbot1/watchdog_reset": "std_msgs/Empty"
+    }
+  },
+  "teleop_autoID_12": {
+    "topic": "/sirbot1/cmd_vel",
+    "linear_velocity": 0.4,
+    "angular_velocity": 0.8,
+    "joy_offset_x": "50%",
+    "joy_offset_y": "85%",
+    "accel": 0.05,
+    "invert_angular": true,
+    "holonomic_swap": false
+  },
+  "path_autoID_11": {
+    "topic": "/global_path_visualization",
+    "color": "#00ff00"
+  },
+  "keyboardController_autoID_12": {
+    "topic": "/sirbot1/cmd_vel_rc",
+    "linear_velocity": 0.35,
+    "angular_velocity": 0.5
+  },
+  "markerarray_autoID_13": {
+    "topic": "/sirbot1/occu_viz"
+  },
+  "grid_autoID_14": {
+    "size": 1,
+    "thickness": 1,
+    "colour": "#3e556a"
+  },
+  "markerarray_autoID_15": {
+    "topic": "/sirbot1/DEGC_Marker"
+  },
+  "markerarray_autoID_16": {
+    "topic": "/sirbot1/DEGC_direction"
+  },
+  "markerarray_autoID_17": {
+    "topic": "/sirbot1/DEGC_direction"
+  },
+  "markerarray_autoID_18": {
+    "topic": "/sirbot1/DEGC_Marker"
+  },
+  "markerarray_autoID_19": {
+    "topic": "/visualization_marker_array"
+  },
+  "compressedimage_autoID_20": {
+    "topic": "/sirbot1/camera/color/image_raw/compressed",
+    "opacity": "0.85",
+    "throttle": "50",
+    "width": "25",
+    "img_offset_x": 15.037593984962406,
+    "img_offset_y": 48.07090719499479,
+    "rotation": "0"
+  },
+  "markerarray_autoID_20": {
+    "topic": "/package_table_array"
+  },
+  "compressedimage_autoID_21": {
+    "topic": "/screen_capture/compressed",
+    "opacity": "1",
+    "throttle": "500",
+    "width": "25",
+    "img_offset_x": 12.5,
+    "img_offset_y": 24,
+    "rotation": "0"
+  },
+  "pointcloud_autoID_22": {
+    "topic": "/sirbot1/rgbd_filtered",
+    "opacity": "1",
+    "thickness": "0.02",
+    "color": "#00aeff",
+    "throttle": "100"
+  },
+  "teleop_autoID_23": {
+    "topic": "/sirbot1/cmd_vel_rc",
+    "linear_velocity": 0.3,
+    "angular_velocity": 0.2,
+    "joy_offset_x": "50%",
+    "joy_offset_y": "85%",
+    "accel": 0.04,
+    "invert_angular": true,
+    "holonomic_swap": false
+  },
+  "keyboardController_autoID_24": {
+    "topic": "/sirbot1/cmd_vel_rc",
+    "linear_velocity": 0.3,
+    "angular_velocity": 0.2
+  }
+}
