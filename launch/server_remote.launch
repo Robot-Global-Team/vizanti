@@ -11,6 +11,7 @@
 	<arg name="delay_between_messages" default="0" />
 	<arg name="max_message_size" default="None" />
 	<arg name="flask_debug" default="True" />
+    <arg name="config_file" default="/home/rgt/catkin_ws/src/vizanti/launch/remote_config_v2.json"/>
 
 	<!-- Launch rosbridge without https so it works in AP mode. -->
         <node name="vizanti_rosbridge" pkg="rosbridge_server" type="rosbridge_websocket" output="screen" launch-prefix="bash -c 'sleep $(arg delay); $0 $@' " >
@@ -32,9 +33,14 @@
 		<param name="port_rosbridge" value="$(arg port_rosbridge)"/>
 		<param name="base_url" value="$(arg base_url)"/>
 		<param name="flask_debug" value="$(arg flask_debug)"/>
+		<param name="config_file" value="$(arg config_file)"/>  <!-- ✅ 여기 추가 -->
+
 	</node>
 
         <node name="vizanti_topic_handler_node" pkg="vizanti" type="topic_handler.py" output="screen" launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "/>
         <node name="vizanti_service_handler_node" pkg="vizanti" type="service_handler.py" output="screen" launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "/>
+
+        <node pkg="vizanti" type="vizanti_function.py" name="vizanti_function_node" output="screen" launch-prefix="python3"/>
+
     
 </launch>
