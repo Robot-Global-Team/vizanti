@@ -1,7 +1,8 @@
 <launch>
 
-	<arg name="port" default="5000" />
-        <arg name="delay" default="0" />
+		<arg name="port" default="5000" />
+	        <arg name="delay" default="120" />
+		<arg name="robot_ns" default="$(optenv ROS_NAMESPACE)" />
 
 	<arg name="port_rosbridge" default="5001" />
 	<arg name="base_url" default="" /> <!-- e.g. /vizanti -->
@@ -40,7 +41,10 @@
         <node name="vizanti_topic_handler_node" pkg="vizanti" type="topic_handler.py" output="screen" launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "/>
         <node name="vizanti_service_handler_node" pkg="vizanti" type="service_handler.py" output="screen" launch-prefix="bash -c 'sleep $(arg delay); $0 $@' "/>
 
-        <node pkg="vizanti" type="vizanti_function.py" name="vizanti_function_node" output="screen" launch-prefix="python3"/>
+	        <node pkg="vizanti" type="vizanti_function.py" name="vizanti_function_node" output="screen"
+	              launch-prefix="bash -c 'sleep $(arg delay); exec python3 $0 $@' ">
+			<param name="robot_ns" value="$(arg robot_ns)"/>
+		</node>
 
     
 </launch>

@@ -7,6 +7,7 @@ import io
 import os
 import requests
 import json
+import yaml
 
 from std_msgs.msg import String
 from visualization_msgs.msg import Marker, MarkerArray
@@ -27,6 +28,40 @@ except:
     from mss import mss
 
 os.environ["DISPLAY"] = ":0"
+
+
+def resolve_robot_namespace():
+    """Resolve the robot namespace without assuming a fixed robot number."""
+    robot_ns = rospy.get_param("~robot_ns", "").strip()
+    if not robot_ns:
+        robot_ns = os.environ.get("ROS_NAMESPACE", "").strip()
+
+    if not robot_ns:
+        info_path = os.path.expanduser("~/.ros/.setting/info.yaml")
+        try:
+            with open(info_path, "r") as info_file:
+                info = yaml.safe_load(info_file) or {}
+
+            sw_info = info.get("sw", {})
+            robot_name = str(sw_info.get("name", "")).strip()
+            robot_number = sw_info.get("number")
+            if robot_name and robot_number is not None:
+                robot_ns = "{}{}".format(robot_name, robot_number)
+        except Exception as error:
+            rospy.logwarn(
+                "Failed to resolve robot namespace from %s: %s",
+                info_path,
+                error,
+            )
+
+    if not robot_ns:
+        raise RuntimeError(
+            "Robot namespace is unavailable. Set ~robot_ns, ROS_NAMESPACE, "
+            "or sw.name/sw.number in ~/.ros/.setting/info.yaml."
+        )
+
+    return "/" + robot_ns.strip("/")
+
 
 class ScreenCaptureNode:
     def __init__(self):
@@ -69,6 +104,8 @@ class TaskInfoVisualizer:
     def __init__(self):
         # ROS 노드 초기화
         rospy.init_node('task_info_listener', anonymous=True)
+        self.robot_ns = resolve_robot_namespace()
+        rospy.loginfo("Vizanti robot namespace: %s", self.robot_ns)
         self.tables = self.package_data()
         self.path_data = None
         self.cnt = 0
@@ -80,8 +117,16 @@ class TaskInfoVisualizer:
 
 
         # 토픽 구독 설정
-        self.subscriber = rospy.Subscriber("/sirbot1/state_machine/task_info", String, self.callback)
-        self.global_path = rospy.Subscriber("/sirbot1/smooth_path", Path, self.path_callback)
+        self.subscriber = rospy.Subscriber(
+            self.robot_ns + "/state_machine/task_info",
+            String,
+            self.callback,
+        )
+        self.global_path = rospy.Subscriber(
+            self.robot_ns + "/smooth_path",
+            Path,
+            self.path_callback,
+        )
 
         self.path_visulization = rospy.Publisher("/global_path_visualization", Path, queue_size=10)
 
