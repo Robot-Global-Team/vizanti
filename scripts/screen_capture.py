@@ -6,10 +6,12 @@ from mss import mss
 from PIL import Image as PILImage
 import io
 
+SCREEN_CAPTURE_TOPIC = "/screen_capture/compressed"
+
 class ScreenCaptureNode:
     def __init__(self):
         rospy.init_node('screen_capture_node', anonymous=True)
-        self.image_pub = rospy.Publisher('screen_capture/compressed', CompressedImage, queue_size=10)
+        self.image_pub = rospy.Publisher(SCREEN_CAPTURE_TOPIC, CompressedImage, queue_size=10)
         self.rate = rospy.Rate(1)  # 1Hz (1초에 한 번)
         self.sct = mss()
 

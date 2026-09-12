@@ -61,8 +61,29 @@ function initializeNav() {
 }
 
 document.addEventListener("DOMContentLoaded", (event) =>{
-	Promise.all([elementTemplatesPromise]).then((values) => {
-		element_templates = values[0];
+		Promise.all([elementTemplatesPromise]).then((values) => {
+			element_templates = values[0];
+
+			// Remove settings for widgets which no longer ship with this Vizanti build.
+			// In particular, older clients may have the retired generic
+			// "compressedimage" widget saved in localStorage.
+			let settings_changed = false;
+			if (!Array.isArray(settings.navbar)) {
+				settings.navbar = [];
+				settings_changed = true;
+			} else {
+				settings.navbar = settings.navbar.filter((item) => {
+					const template_exists = item && element_templates[item.type] !== undefined;
+					if (!template_exists) {
+						if (item && item.id)
+							delete settings[item.id];
+						settings_changed = true;
+					}
+					return template_exists;
+				});
+			}
+			if (settings_changed)
+				settings.save();
 
 		const icon_container = document.getElementById("icon_container");
 		const modal_container = document.getElementById("modal_container");
@@ -70,6 +91,10 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 		const script_container = document.getElementById("script_container");
 	
 		window.addEventListener("add_widget", (event) => {
+			if (event.widget_type === "screencapture" && settings.navbar.some((item) => item.type === "screencapture")) {
+				return;
+			}
+
 			if(isNaN(uid)){
 				if(isNaN(settings.uid))
 					uid = 0;
@@ -112,6 +137,7 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 				});
 
 				settings.navbar.splice(elementIndex, 1);
+				delete settings[uniqueID];
 				settings.save();
 
 				window.dispatchEvent(new Event("icons_changed"));
@@ -121,4 +147,3 @@ document.addEventListener("DOMContentLoaded", (event) =>{
 		initializeNav();
 	});	
 });
-

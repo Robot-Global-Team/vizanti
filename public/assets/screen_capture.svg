@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Screen Capture</title>
+  <rect x="7" y="10" width="50" height="36" rx="4" fill="#4d4d4d" stroke="#e0e0e0" stroke-width="3"/>
+  <rect x="13" y="16" width="38" height="24" rx="2" fill="#1f1f1f"/>
+  <path d="M25 54h14M32 46v8" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="28" r="7" fill="none" stroke="#7fd36b" stroke-width="3"/>
+  <path d="M32 18v4M32 34v4M22 28h4M38 28h4" stroke="#7fd36b" stroke-width="2" stroke-linecap="round"/>
+</svg>

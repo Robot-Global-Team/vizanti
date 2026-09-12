@@ -29,6 +29,8 @@ except:
 
 os.environ["DISPLAY"] = ":0"
 
+SCREEN_CAPTURE_TOPIC = "/screen_capture/compressed"
+
 
 def resolve_robot_namespace():
     """Resolve the robot namespace without assuming a fixed robot number."""
@@ -65,7 +67,9 @@ def resolve_robot_namespace():
 
 class ScreenCaptureNode:
     def __init__(self):
-        self.image_pub = rospy.Publisher('screen_capture/compressed', CompressedImage, queue_size=10)
+        self.image_pub = rospy.Publisher(
+            SCREEN_CAPTURE_TOPIC, CompressedImage, queue_size=10
+        )
         self.rate = rospy.Rate(1)  # 1Hz (1초에 한 번)
         self.sct = mss()
 

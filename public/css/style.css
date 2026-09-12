@@ -448,23 +448,18 @@ canvas {
 	z-index: 0;
 }
 
-.compressedimage {
-	width: 25%;
-	height: 25%;
+.screencapture {
+	width: min(28vw, 480px);
+	height: auto;
+	max-height: 45vh;
+	object-fit: contain;
 
-	position: absolute;
-	top: 0;
-	left: 0;
-	border: 3px solid #424242;
-
-	transition: transform 0.2s;  
-}
-
-.compressedimage_preview {
 	position: fixed;
-	bottom: 15vh; 
-	left: 50vw; 
-	transform: translate(-50px, -50px);
+	right: 16px;
+	bottom: 16px;
+	border: 3px solid #424242;
+	z-index: 14;
+	pointer-events: none;
 }
 
 /* Buttons */
